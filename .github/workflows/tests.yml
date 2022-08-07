@@ -1,0 +1,84 @@
+---
+name: Tests
+on: [push]
+
+env:
+  ARCH: amd64
+
+jobs:
+  shellcheck:
+    name: Shell Check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Run ShellCheck
+        uses: ludeeus/action-shellcheck@master
+
+  yamllint:
+    name: Yaml Lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Run Yaml Lint
+        uses: ibiqlik/action-yamllint@v3
+
+  clamav-test:
+    name: ClamAV tests
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Install
+        run: .github/actions/scanning/installation.sh
+
+      - name: ClamAV check - should find virus
+        run: |
+          mkdir test-clamav-fail
+          curl -sL https://secure.eicar.org/eicar.com -o .github/workflows/eicar.txt
+          docker build -t test-clamav-fail -f .github/workflows/test-clamav-fail.dockerfile .github/workflows/
+          set +e
+          .github/actions/scanning/clamav.sh test-clamav-fail test-clamav-fail
+          exit_code=$?
+          if [[ ${exit_code} -ne 0 ]]; then
+            echo "We expect the scan to fail. All good."
+            exit 0
+          else
+            echo "The scan should not pass."
+            exit 1
+          fi
+
+      - name: ClamAV a Scratch-based image should not die at ClamAV step
+        run: |
+          mkdir test-scratch-pass-logs
+          .github/actions/scanning/clamav.sh docker.io/rancher/coredns-coredns:1.6.9 test-scratch-pass-logs
+
+
+  allowlist-test:
+    name: Test CVE Allowlist
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Install
+        run: .github/actions/scanning/installation.sh
+
+      - name: CVE check - debian:jessie-slim with lots of CVEs should not pass
+        run: |
+          set +e
+          mkdir test-fail-logs
+          test=$(bash -c '.github/actions/scanning/docker_image.sh debian:jessie-slim test-fail-logs; exit $?' 2>&1)
+          exit_code=$?
+          if [[ ${exit_code} -ne 0 ]]; then
+            echo "We expect the scan to fail. All good."
+            exit 0
+          else
+            echo "The scan should not pass."
+            exit 1
+          fi
+
+      - name: CVE check - alpine:3.8.4 with a known (and allowed) CVE should pass
+        run: |
+          mkdir test-alpine-pass-logs
+          .github/actions/scanning/docker_image.sh alpine:3.8.4 test-alpine-pass-logs

@@ -1,0 +1,35 @@
+---
+name: "Zilliqa OCI build scanning"
+description: "Provides scanning capabilities to docker builds"
+inputs:
+  image_names:
+    description: Names of OCI images to scan, comma separated. Defaults to env.IMAGE_NAME
+    required: false
+outputs:
+  logs_directory:
+    description: "Path to the director with scanning logs"
+    value: ${{ steps.scanning.outputs.logs_directory }}
+runs:
+  using: "composite"
+  steps:
+    - id: scanning
+      shell: bash
+      env:
+        INPUT_IMAGE_NAMES: ${{ inputs.image_names }}
+      run: |
+        set -e
+        cd img-build-tools-library/.github/actions/scanning
+        ./installation.sh
+        LOGS_DIRECTORY=$GITHUB_WORKSPACE/scan_logs
+        mkdir $LOGS_DIRECTORY
+        if [[ -z "$INPUT_IMAGE_NAMES" ]]; then
+          INPUT_IMAGE_NAMES="${{ env.IMAGE_NAME }}"
+          echo "Using default image name ${{ env.IMAGE_NAME }}"
+        else
+          echo "Using image names: $INPUT_IMAGE_NAMES"
+        fi
+        echo $INPUT_IMAGE_NAMES | sed -n 1'p' | tr ',' '\n' | while read IMAGE; do
+          ./docker_image.sh ${{ env.ECR_SERVER_HOST}}/$IMAGE:${{ env.IMAGE_TAG }} $LOGS_DIRECTORY
+          ./clamav.sh ${{ env.ECR_SERVER_HOST}}/$IMAGE:${{ env.IMAGE_TAG }} $LOGS_DIRECTORY
+        done
+        echo "::set-output name=logs_directory::$LOGS_DIRECTORY"

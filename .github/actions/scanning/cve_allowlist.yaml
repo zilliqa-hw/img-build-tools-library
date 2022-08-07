@@ -1,0 +1,47 @@
+---
+- id: CVE-2015-8768
+  url:
+    - https://nvd.nist.gov/vuln/detail/CVE-2015-8768
+    - https://code.launchpad.net/~cjwatson/click/audit-missing-dot-slash/+merge/274554
+  reason: |
+    Only affects the installation of the "click" module.
+    The package has no newer version that fixes the issue.
+
+- id: CVE-2018-20225
+  url:
+    - https://nvd.nist.gov/vuln/detail/CVE-2018-20225
+  reason: |
+    It is currently disputed and has no known fix.
+
+- id: CVE-2019-25013
+  url:
+    - https://nvd.nist.gov/vuln/detail/CVE-2019-25013
+  reason: |
+    It is only a vulnerability when processing multi-byte string with EUC-KR encoding.
+    No known fix in the RedHat UBI 8.
+
+- id: CVE-2021-3449
+  url:
+    - https://nvd.nist.gov/vuln/detail/CVE-2019-25013
+  reason: |
+    It is currently disputed and has no known fix known fix in the RedHat UBI 8.
+
+- id: CVE-2021-3450
+  url:
+    - https://nvd.nist.gov/vuln/detail/CVE-2021-3450
+  reason: |
+    It is currently disputed and has no known fix known fix in the RedHat UBI 8.
+
+- id: CVE-2019-20916
+  url:
+    - https://nvd.nist.gov/vuln/detail/CVE-2019-20916
+  reason: |
+    We upgrade from Pip v9 to Pip v21 almost immediately in every case, due to it is
+    too old for most Python module. Unfortunately this is the version that comes
+    with UBI8 and currently it is not possible to install Python 3 without it.
+
+- id: CVE-2019-5827
+  url:
+    - https://nvd.nist.gov/vuln/detail/CVE-2019-5827
+  reason: |
+    It only affects SQLite in Google Chrome. No known fix in the RedHat UBI 8.

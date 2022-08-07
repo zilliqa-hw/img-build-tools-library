@@ -1,0 +1,23 @@
+---
+name: "Zilliqa OCI image release"
+description: "Releases OCI images"
+inputs:
+  image_names:
+    description: Names of OCI images to release, comma separated. Defaults to env.IMAGE_NAME
+    required: false
+runs:
+  using: "composite"
+  steps:
+    - id: release
+      shell: bash
+      env:
+        INPUT_IMAGE_NAMES: ${{ inputs.image_names }}
+      run: |
+        if [[ -z "$INPUT_IMAGE_NAMES" ]]; then
+          INPUT_IMAGE_NAMES="${{ env.IMAGE_NAME }}"
+        fi
+        echo $INPUT_IMAGE_NAMES | sed -n 1'p' | tr ',' '\n' | while read IMAGE; do
+          RELEASE_IMAGE_NAME="$ECR_SERVER_HOST/$IMAGE:${{ github.event.release.tag_name }}"
+          docker tag ${{ env.ECR_SERVER_HOST}}/$IMAGE:${{ env.IMAGE_TAG }} $RELEASE_IMAGE_NAME
+          docker push $RELEASE_IMAGE_NAME
+        done
