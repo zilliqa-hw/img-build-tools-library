@@ -53,7 +53,6 @@ jobs:
           mkdir test-scratch-pass-logs
           .github/actions/scanning/clamav.sh docker.io/rancher/coredns-coredns:1.6.9 test-scratch-pass-logs
 
-
   allowlist-test:
     name: Test CVE Allowlist
     runs-on: ubuntu-latest
@@ -78,7 +77,7 @@ jobs:
             exit 1
           fi
 
-      - name: CVE check - alpine:3.8.4 with a known (and allowed) CVE should pass
+      - name: CVE check - alpine:3.14.7 with a known (and allowed) CVE should pass
         run: |
           mkdir test-alpine-pass-logs
-          .github/actions/scanning/docker_image.sh alpine:3.8.4 test-alpine-pass-logs
+          .github/actions/scanning/docker_image.sh alpine:3.14.7 test-alpine-pass-logs
