@@ -4,9 +4,9 @@ from datetime import datetime
 import os
 
 created = datetime.now().strftime('%Y-%m-%dT%H:%M:%SZ')
-registry_name = os.getenv("ACR_SERVER_HOST")
+registry_name = os.getenv("ECR_SERVER_HOST")
 image_name = os.getenv("IMAGE_NAME") if os.getenv("IMAGE_NAME") else os.getenv("GITHUB_REPOSITORY").split("/")[1].replace("img-", "")
-repo_image_name = "azure/%s" % image_name
+repo_image_name = image_name
 repo_sha = os.getenv("GITHUB_SHA")
 
 print("ACR_SERVER_HOST=%s" % (registry_name))
