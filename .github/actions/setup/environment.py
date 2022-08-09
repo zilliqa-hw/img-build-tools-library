@@ -9,7 +9,7 @@ image_name = os.getenv("IMAGE_NAME") if os.getenv("IMAGE_NAME") else os.getenv("
 repo_image_name = image_name
 repo_sha = os.getenv("GITHUB_SHA")
 
-print("ACR_SERVER_HOST=%s" % (registry_name))
+print("ECR_SERVER_HOST=%s" % (registry_name))
 print("CREATED=%s" % (created))
 print("IMAGE_NAME=%s" % (repo_image_name))
 print("IMAGE_TAG=%s" % (repo_sha))

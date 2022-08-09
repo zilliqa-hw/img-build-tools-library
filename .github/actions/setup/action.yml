@@ -2,16 +2,16 @@
 name: "Zilliqa build setup"
 description: "Provides basic setup for container image building"
 inputs:
-  acr_server_host:
+  ecr_server_host:
     description: "Host name of ECR used for the repository"
-    default: 1932.amazon.com
+    default: 338149388389.dkr.ecr.eu-central-1.amazonaws.com
     required: false
 runs:
   using: "composite"
   steps:
     - shell: bash
       env:
-        ACR_SERVER_HOST: ${{ inputs.ecr_server_host }}
+        ECR_SERVER_HOST: ${{ inputs.ecr_server_host }}
       run: |
         ./img-build-tools-library/.github/actions/setup/environment.py > /tmp/env
         cat /tmp/env
