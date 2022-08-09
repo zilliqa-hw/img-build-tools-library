@@ -4,3 +4,21 @@
     - https://nvd.nist.gov/vuln/detail/CVE-2019-14697
   reason: |
     `musl` vulnerability, ignored to make the test pass.
+
+- id: CVE-2022-2097
+  url:
+    - https://nvd.nist.gov/vuln/detail/CVE-2022-2097
+  reason: |
+    openssl: AES OCB fails to encrypt some bytes - no known fix
+
+- id: CVE-2022-24434
+  url:
+    - https://avd.aquasec.com/nvd/cve-2022-24434
+  reason: |
+    Crash in HeaderParser in dicer - no known fix
+
+- id: CVE-2022-29244
+  url:
+    - https://avd.aquasec.com/nvd/cve-2022-29244
+  reason: |
+    npm pack ignores root-level .gitignore - no known fix
